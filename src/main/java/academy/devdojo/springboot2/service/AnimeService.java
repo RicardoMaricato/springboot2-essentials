@@ -29,6 +29,7 @@ public class AnimeService {
     public List<AnimeDto> findByName(String name) {
         List<Anime> anime = animeRepository.findByName(name);
         return AnimeMapper.INSTANCE.toAnimeDto(anime);
+//        return animeRepository.findByName(name);
     }
 
     public Anime findByIdOrThrowBadRequestException(long id) {
