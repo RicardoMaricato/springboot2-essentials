@@ -38,15 +38,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         log.info("Password encoded {}", passwordEncoder.encode("academy"));
-        auth.inMemoryAuthentication()
-                .withUser("william")
-                .password(passwordEncoder.encode("academy"))
-                .roles("USER", "ADMIN")
-                .and()
-                .withUser("devdojo")
-                .password(passwordEncoder.encode("academy"))
-                .roles("USER");
-//        auth.userDetailsService(devDojoUserDetailsService)
-//                .passwordEncoder(passwordEncoder);
+//        auth.inMemoryAuthentication()
+//                .withUser("william")
+//                .password(passwordEncoder.encode("academy"))
+//                .roles("USER", "ADMIN")
+//                .and()
+//                .withUser("devdojo")
+//                .password(passwordEncoder.encode("academy"))
+//                .roles("USER");
+        auth.userDetailsService(devDojoUserDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
 }
