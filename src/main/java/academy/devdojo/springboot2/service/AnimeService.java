@@ -1,6 +1,7 @@
 package academy.devdojo.springboot2.service;
 
 import academy.devdojo.springboot2.domain.Anime;
+import academy.devdojo.springboot2.domain.dto.AnimeDto;
 import academy.devdojo.springboot2.exception.BadRequestException;
 import academy.devdojo.springboot2.mapper.AnimeMapper;
 import academy.devdojo.springboot2.repository.AnimeRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,17 +21,24 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
 
-    public List<Anime> listAll() {
-        return animeRepository.findAll();
+    public List<AnimeDto> listAll() {
+        List<Anime> animes = animeRepository.findAll();
+        return AnimeMapper.INSTANCE.toAnimeDto(animes);
     }
 
-    public List<Anime> findByName(String name) {
-        return animeRepository.findByName(name);
+    public List<AnimeDto> findByName(String name) {
+        List<Anime> anime = animeRepository.findByName(name);
+        return AnimeMapper.INSTANCE.toAnimeDto(anime);
     }
 
     public Anime findByIdOrThrowBadRequestException(long id) {
         return animeRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Anime not Found"));
+    }
+
+    public AnimeDto findById(long id) {
+        Anime anime = findByIdOrThrowBadRequestException(id);
+        return AnimeMapper.INSTANCE.toAnimeDto(anime);
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {

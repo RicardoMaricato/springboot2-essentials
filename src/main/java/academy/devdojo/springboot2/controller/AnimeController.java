@@ -1,6 +1,7 @@
 package academy.devdojo.springboot2.controller;
 
 import academy.devdojo.springboot2.domain.Anime;
+import academy.devdojo.springboot2.domain.dto.AnimeDto;
 import academy.devdojo.springboot2.requests.AnimePostRequestBody;
 import academy.devdojo.springboot2.requests.AnimePutRequestBody;
 import academy.devdojo.springboot2.service.AnimeService;
@@ -27,25 +28,25 @@ public class AnimeController {
     private final AnimeService animeService;
 
     @GetMapping
-    public ResponseEntity<List<Anime>> list() {
+    public ResponseEntity<List<AnimeDto>> list() {
         log.info(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok( animeService.listAll());
+        return ResponseEntity.ok(animeService.listAll());
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Anime> findById(@PathVariable long id) {
-        return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
+    public ResponseEntity<AnimeDto> findById(@PathVariable long id) {
+        return ResponseEntity.ok(animeService.findById(id));
     }
 
     @GetMapping(path = "/by-id/{id}")
-    public ResponseEntity<Anime> findByIdAuthenticationPrincipal(@PathVariable long id,
+    public ResponseEntity<AnimeDto> findByIdAuthenticationPrincipal(@PathVariable long id,
                                                                  @AuthenticationPrincipal UserDetails userDetails) {
         log.info(userDetails);
-        return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
+        return ResponseEntity.ok(animeService.findById(id));
     }
 
     @GetMapping(path = "/find")
-    public ResponseEntity<List<Anime>> findByName(@RequestParam String name) {
+    public ResponseEntity<List<AnimeDto>> findByName(@RequestParam String name) {
         return ResponseEntity.ok(animeService.findByName(name));
     }
 
