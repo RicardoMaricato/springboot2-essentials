@@ -1,8 +1,13 @@
 package academy.devdojo.springboot2.repository;
 
 import academy.devdojo.springboot2.domain.Anime;
+import academy.devdojo.springboot2.domain.dto.AnimeDto;
+import academy.devdojo.springboot2.mapper.AnimeMapper;
+import academy.devdojo.springboot2.requests.AnimePostRequestBody;
+import academy.devdojo.springboot2.requests.AnimePutRequestBody;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +27,9 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Save persists animes when Successful")
     void save_PersistAnime_WhenSuccessful() {
-        Anime animeToBeSaved = createAnime();
+        AnimePostRequestBody animePostRequestBody = createAnimePost();
+
+        Anime animeToBeSaved = AnimeMapper.INSTANCE.toAnime(animePostRequestBody);
 
         Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
@@ -31,6 +38,8 @@ class AnimeRepositoryTest {
         Assertions.assertThat(animeSaved.getId()).isNotNull();
 
         Assertions.assertThat(animeSaved.getName()).isEqualTo(animeToBeSaved.getName());
+
+        Assertions.assertThat(animeSaved.getName()).isEqualTo(animePostRequestBody.getName());
     }
 
     @Test
@@ -40,7 +49,9 @@ class AnimeRepositoryTest {
 
         Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
-        animeSaved.setName("Overlord");
+        AnimePutRequestBody animePutRequestBody = createAnimePut();
+
+        animeSaved.setName(animePutRequestBody.getName());
 
         Anime animeUpdated = this.animeRepository.save(animeSaved);
 
@@ -76,9 +87,16 @@ class AnimeRepositoryTest {
 
         List<Anime> animes = this.animeRepository.findByName(name);
 
+        List<AnimeDto> animeDtos = AnimeMapper.INSTANCE.toAnimeDto(animes);
+
         Assertions.assertThat(animes)
                 .isNotEmpty()
                 .contains(animeSaved);
+
+//        Assertions.assertThat(animeDtos)
+//                .isNotEmpty()
+//                .contains(animeSaved);
+
     }
 
     @Test
@@ -107,6 +125,18 @@ class AnimeRepositoryTest {
     private Anime createAnime() {
         return Anime.builder()
                 .name("Hajime no Ippo")
+                .build();
+    }
+
+    private AnimePostRequestBody createAnimePost() {
+        return AnimePostRequestBody.builder()
+                .name("Naruto")
+                .build();
+    }
+
+    private AnimePutRequestBody createAnimePut() {
+        return AnimePutRequestBody.builder()
+                .name("Dragon Ball")
                 .build();
     }
 }
