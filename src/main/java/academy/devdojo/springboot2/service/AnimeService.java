@@ -33,7 +33,7 @@ public class AnimeService {
 
     public Anime findByIdOrThrowBadRequestException(long id) {
         return animeRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Anime not Found"));
+                .orElseThrow(() -> new BadRequestException("Anime not Found.git"));
     }
 
     public AnimeDto findById(long id) {
