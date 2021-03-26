@@ -45,6 +45,11 @@ public class AnimeController {
         return ResponseEntity.ok(animeService.findById(id));
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<AnimeDto> findById(@PathVariable long id) {
+        return ResponseEntity.ok(animeService.findById(id));
+    }
+
     @GetMapping(path = "/find")
     public ResponseEntity<List<AnimeDto>> findByName(@RequestParam String name) {
         return ResponseEntity.ok(animeService.findByName(name));
@@ -56,15 +61,16 @@ public class AnimeController {
         return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
+    @PutMapping
+    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody) {
+        animeService.replace(animePutRequestBody);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         animeService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody) {
-        animeService.replace(animePutRequestBody);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }

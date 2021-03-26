@@ -18,13 +18,6 @@ public class AnimeCreator {
                 .build();
     }
 
-    public static AnimeDto createValidAnimeDto(){
-        return AnimeDto.builder()
-                .name("Hajime no Ippo")
-                .id(1L)
-                .build();
-    }
-
     public static Anime createValideUpdatedAnime(){
         return Anime.builder()
                 .name("Hajime no Ippo 2")
