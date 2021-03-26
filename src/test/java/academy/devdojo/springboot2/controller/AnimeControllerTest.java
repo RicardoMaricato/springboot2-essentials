@@ -37,6 +37,9 @@ class AnimeControllerTest {
         PageImpl<AnimeDto> animePage = new PageImpl<>(List.of(AnimeCreator.createValidAnimeDto()));
         BDDMockito.when(animeService.listAll(ArgumentMatchers.any()))
                 .thenReturn(animePage);
+
+        BDDMockito.when(animeService.listAllNonPageable())
+                .thenReturn(List.of(AnimeCreator.createValidAnimeDto()));
     }
 
     @Test
@@ -55,5 +58,22 @@ class AnimeControllerTest {
         Assertions.assertThat(animePage.getBody().toList().get(0).getName()).isEqualTo(expectedName);
 
         Assertions.assertThat(animePage.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("ListAll returns list of anime when successful")
+    void listAl_ReturnsListOfAnimesInsidePageObject_WhenSuccessful(){
+        String expectedName = AnimeCreator.createValidAnime().getName();
+
+        ResponseEntity<List<AnimeDto>> animeDto = animeController.listAll();
+
+        Assertions.assertThat(animeDto.getBody())
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(animeDto.getBody().get(0).getName()).isEqualTo(expectedName);
+
+        Assertions.assertThat(animeDto.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
