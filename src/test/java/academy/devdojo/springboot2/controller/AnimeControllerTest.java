@@ -79,7 +79,7 @@ class AnimeControllerTest {
 
     @Test
     @DisplayName("listAll returns list of anime when successful")
-    void listAll_ReturnsListOfAnimesInsidePageObject_WhenSuccessful(){
+    void listAll_ReturnsListOfAnimes_WhenSuccessful(){
         String expectedName = AnimeCreator.createValidAnime().getName();
 
         ResponseEntity<List<AnimeDto>> animeDto = animeController.listAll();
