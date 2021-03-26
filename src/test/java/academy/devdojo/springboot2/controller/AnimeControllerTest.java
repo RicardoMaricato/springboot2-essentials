@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -32,7 +34,7 @@ class AnimeControllerTest {
 
     @BeforeEach
     void setUp() {
-        PageImpl<Anime> animePage = new PageImpl<>(List.of(AnimeCreator.createValidAnime()));
+        PageImpl<AnimeDto> animePage = new PageImpl<>(List.of(AnimeCreator.createValidAnimeDto()));
         BDDMockito.when(animeService.listAll(ArgumentMatchers.any()))
                 .thenReturn(animePage);
     }
@@ -42,14 +44,16 @@ class AnimeControllerTest {
     void list_ReturnsListOfAnimesInsidePageObject_WhenSuccessful(){
         String expectedName = AnimeCreator.createValidAnime().getName();
 
-        Page<Anime> animePage = animeController.list(null).getBody();
+        ResponseEntity<Page<AnimeDto>> animePage = animeController.list(null);
 
         Assertions.assertThat(animePage).isNotNull();
 
-        Assertions.assertThat(animePage.toList())
+        Assertions.assertThat(animePage.getBody().toList())
                 .isNotEmpty()
                 .hasSize(1);
 
-        Assertions.assertThat(animePage.toList().get(0).getName()).isEqualTo(expectedName);
+        Assertions.assertThat(animePage.getBody().toList().get(0).getName()).isEqualTo(expectedName);
+
+        Assertions.assertThat(animePage.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

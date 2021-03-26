@@ -1,6 +1,7 @@
 package academy.devdojo.springboot2.util;
 
 import academy.devdojo.springboot2.domain.Anime;
+import academy.devdojo.springboot2.domain.dto.AnimeDto;
 
 public class AnimeCreator {
 
@@ -12,6 +13,13 @@ public class AnimeCreator {
 
     public static Anime createValidAnime(){
         return Anime.builder()
+                .name("Hajime no Ippo")
+                .id(1L)
+                .build();
+    }
+
+    public static AnimeDto createValidAnimeDto(){
+        return AnimeDto.builder()
                 .name("Hajime no Ippo")
                 .id(1L)
                 .build();

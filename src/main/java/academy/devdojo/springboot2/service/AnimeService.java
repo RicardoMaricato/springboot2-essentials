@@ -14,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,32 +25,28 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
 
-    public Page<Anime> listAll(Pageable pageable) {
-       return animeRepository.findAll(pageable);
+    public Page<AnimeDto> listAll(Pageable pageable) {
+        return animeRepository.findAll(pageable).map(AnimeMapper.INSTANCE::toAnimeDto);
     }
 
-    public List<Anime> listAllNonPageable() {
-        return animeRepository.findAll();
-//        return AnimeMapper.INSTANCE.toAnimeDto(animes);
+    public List<AnimeDto> listAllNonPageable() {
+        return animeRepository.findAll().stream().map(AnimeMapper.INSTANCE::toAnimeDto)
+                .collect(Collectors.toList());
     }
 
     public List<AnimeDto> findByName(String name) {
-        List<Anime> anime = animeRepository.findByName(name);
-        return AnimeMapper.INSTANCE.toAnimeDto(anime);
+        return animeRepository.findByName(name).stream().map(AnimeMapper.INSTANCE::toAnimeDto)
+                .collect(Collectors.toList());
     }
 
     public Anime findByIdOrThrowBadRequestException(long id) {
         return animeRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Anime not Found.git"));
+                .orElseThrow(() -> new BadRequestException("Anime not Found"));
     }
 
-//    public AnimeDto findById(long id) {
-//        Anime anime = findByIdOrThrowBadRequestException(id);
-//        return AnimeMapper.INSTANCE.toAnimeDto(anime);
-//    }
-
-    public Anime findById(long id) {
-        return findByIdOrThrowBadRequestException(id);
+    public AnimeDto findById(long id) {
+        Anime anime = findByIdOrThrowBadRequestException(id);
+        return AnimeMapper.INSTANCE.toAnimeDto(anime);
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {

@@ -29,17 +29,17 @@ public class AnimeController {
     private final AnimeService animeService;
 
     @GetMapping
-    public ResponseEntity<Page<Anime>> list(Pageable pageable) {
+    public ResponseEntity<Page<AnimeDto>> list(Pageable pageable) {
         return ResponseEntity.ok(animeService.listAll(pageable));
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<Anime>> listAll() {
+    public ResponseEntity<List<AnimeDto>> listAll() {
         return ResponseEntity.ok(animeService.listAllNonPageable());
     }
 
     @GetMapping(path = "/by-id/{id}")
-    public ResponseEntity<Anime> findByIdAuthenticationPrincipal(@PathVariable long id,
+    public ResponseEntity<AnimeDto> findByIdAuthenticationPrincipal(@PathVariable long id,
                                                                  @AuthenticationPrincipal UserDetails userDetails) {
         log.info(userDetails);
         return ResponseEntity.ok(animeService.findById(id));
