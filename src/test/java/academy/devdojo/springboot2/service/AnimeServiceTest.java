@@ -2,8 +2,11 @@ package academy.devdojo.springboot2.service;
 
 import academy.devdojo.springboot2.domain.Anime;
 import academy.devdojo.springboot2.domain.dto.AnimeDto;
+import academy.devdojo.springboot2.exception.BadRequestException;
+import academy.devdojo.springboot2.mapper.AnimeMapperDto;
 import academy.devdojo.springboot2.repository.AnimeRepository;
 import academy.devdojo.springboot2.util.AnimeCreator;
+import academy.devdojo.springboot2.util.AnimeCreatorDto;
 import academy.devdojo.springboot2.util.AnimePostRequestBodyCreator;
 import academy.devdojo.springboot2.util.AnimePutRequestBodyCreator;
 import org.assertj.core.api.Assertions;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +36,9 @@ class AnimeServiceTest {
 
     @Mock
     AnimeRepository animeRepositoryMock;
+
+    @Mock
+    AnimeMapperDto animeMapperDto;
 
     @BeforeEach
     void setUp() {
@@ -86,15 +93,13 @@ class AnimeServiceTest {
     }
 
     @Test
-    @DisplayName("findByIdOrThrowBadRequestException returns anime when successful")
+    @DisplayName("findByIdOrThrowBadRequestException throws BadRequestException when anime is not found")
     void findByIdOrThrowBadRequestException_ReturnsAnimes_WhenSuccessful(){
-        Long expectedId = AnimeCreator.createValidAnime().getId();
+        BDDMockito.when(animeRepositoryMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
 
-        Anime anime = animeService.findByIdOrThrowBadRequestException(1);
-
-        Assertions.assertThat(anime).isNotNull();
-
-        Assertions.assertThat(anime.getId()).isEqualTo(expectedId);
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> animeService.findByIdOrThrowBadRequestException(1));
     }
 
     @Test
