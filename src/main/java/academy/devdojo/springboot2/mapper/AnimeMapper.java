@@ -13,14 +13,13 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public abstract class AnimeMapper {
+public interface AnimeMapper {
 
-    public static final AnimeMapper INSTANCE = Mappers.getMapper(AnimeMapper.class);
+    AnimeMapper INSTANCE = Mappers.getMapper(AnimeMapper.class);
 
-
-    public abstract Anime toAnime(AnimePostRequestBody animePostRequestBody);
-    public abstract Anime toAnime(AnimePutRequestBody animePutRequestBody);
-    public abstract Anime toAnime(AnimeDto animeDto);
+    Anime toAnime(AnimePostRequestBody animePostRequestBody);
+    Anime toAnime(AnimePutRequestBody animePutRequestBody);
+    Anime toAnime(AnimeDto animeDto);
     @InheritConfiguration
-    public abstract AnimeDto toAnimeDto(Anime anime);
+    AnimeDto toAnimeDto(Anime anime);
 }
