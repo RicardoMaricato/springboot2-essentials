@@ -56,8 +56,6 @@ public class AnimeController {
     }
 
     //    @PreAuthorize("hasRole('ADMIN')")
-
-
     @PostMapping
     public ResponseEntity<Anime> save(@RequestBody @Valid AnimePostRequestBody animePostRequestBody) {
         return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
